@@ -28,26 +28,19 @@ RUN apt-get update && apt-get install -y \
     python3 \
     python3-dev \
     python3-distutils \
-    python3-yaml \
-    **python3-sphinx** \
-    **python3-sphinx-rtd-theme** \
     nginx \
     tzdata \
     git \
     wget \
     ca-certificates
 
-
-# GitHub 版 DOMjudge を取得
+# GitHub 版 DOMjudge
 RUN git clone https://github.com/DOMjudge/domjudge.git /domjudge
 WORKDIR /domjudge
 
-# ビルド準備
-RUN ./bootstrap
-
-# PostgreSQL モードで configure
+# bootstrap を完全にスキップする
+# ドキュメント生成を無効化
 RUN ./configure --with-db=pgsql --disable-submitclient --disable-judgehost --disable-docs
-
 
 RUN make domserver
 RUN make install-domserver WEBROOT=/opt/domjudge/webroot
