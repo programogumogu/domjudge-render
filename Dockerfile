@@ -2,7 +2,6 @@ FROM ubuntu:22.04
 
 ARG DEBIAN_FRONTEND=noninteractive
 
-# 必要な依存をすべてインストール（DOMjudge公式推奨 + Render向け）
 RUN apt-get update && apt-get install -y \
     build-essential \
     gcc \
@@ -34,32 +33,23 @@ RUN apt-get update && apt-get install -y \
     wget \
     ca-certificates
 
-
-# DOMjudge tarball を取得
+# DOMjudge 8.2.0 tarball
 RUN wget https://www.domjudge.org/releases/domjudge-8.2.0.tar.gz -O /tmp/domjudge.tar.gz
-
-# 展開
 RUN tar xvf /tmp/domjudge.tar.gz -C /opt
 
-# domserver ディレクトリへ移動
 WORKDIR /opt/domjudge-8.2.0
 
-# configure → make
-RUN ./configure --disable-submitclient --disable-judgehost
+# PostgreSQL モードで configure（最重要）
+RUN ./configure --with-db=pgsql --disable-submitclient --disable-judgehost
+
 RUN make domserver
+RUN make install-domserver WEBROOT=/opt/domjudge/webroot
 
-# Web assets をインストール
-RUN make install-domserver WEBROOT=/opt/domjudge/webroot \
-    && mkdir -p /opt/domjudge/etc
-
-# entrypoint を追加
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
-# nginx をフォアグラウンド化
 RUN echo "daemon off;" >> /etc/nginx/nginx.conf
 
-# ポート公開
 EXPOSE 80
 
 ENTRYPOINT ["/entrypoint.sh"]
