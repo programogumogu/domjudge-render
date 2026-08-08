@@ -17,6 +17,7 @@ RUN apt-get update && apt-get install -y \
     libzip-dev \
     libmagic-dev \
     libjansson-dev \
+    libcgroup-dev \
     php-cli \
     php-fpm \
     php-mbstring \
@@ -32,6 +33,7 @@ RUN apt-get update && apt-get install -y \
     tzdata \
     wget \
     ca-certificates
+
 
 # DOMjudge tarball を取得
 RUN wget https://www.domjudge.org/releases/domjudge-8.2.0.tar.gz -O /tmp/domjudge.tar.gz
