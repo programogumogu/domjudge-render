@@ -49,7 +49,7 @@ RUN apt-get update && apt-get install -y \
 RUN git clone https://github.com/DOMjudge/domjudge.git /domjudge
 
 # domserver ディレクトリに移動
-WORKDIR /domjudge/domserver
+WORKDIR /domjudge
 
 # domserver をビルド
 RUN ./configure --disable-submitclient --disable-judgehost && \
