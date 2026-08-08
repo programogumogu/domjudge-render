@@ -29,6 +29,12 @@ $DJBIN --user="$USER" --password="$PASS" --host="$HOST" --dbname="$DBNAME" insta
 
 /opt/domjudge/domserver/bin/dj_admin_user --add admin --password admin || true
 
+
+echo "Running migrations..."
+php bin/console doctrine:migrations:migrate --no-interaction || echo "Migration failed"
+echo "Loading initial data..."
+php bin/console domjudge:load-data --no-interaction || echo "Load-data failed"
+
 # Run DB migrations (only once needed)
 php bin/console doctrine:migrations:migrate --no-interaction
 
