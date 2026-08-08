@@ -29,5 +29,12 @@ $DJBIN --user="$USER" --password="$PASS" --host="$HOST" --dbname="$DBNAME" insta
 
 /opt/domjudge/domserver/bin/dj_admin_user --add admin --password admin || true
 
+# Run DB migrations (only once needed)
+php bin/console doctrine:migrations:migrate --no-interaction
+
+# Load initial data (admin user, languages, etc.)
+php bin/console domjudge:load-data --no-interaction
+
+
 php-fpm8.1 -F &
 nginx -g "daemon off;"
