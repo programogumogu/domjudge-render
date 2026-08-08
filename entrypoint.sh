@@ -10,20 +10,19 @@ PASS="$(echo $REST | cut -d: -f2 | cut -d@ -f1)"
 HOST="$(echo $REST | cut -d@ -f2 | cut -d/ -f1)"
 DBNAME="$(echo $REST | cut -d/ -f2)"
 
-# DOMjudge 設定ファイル生成
-cat <<EOF > /opt/domjudge/etc/db.php
-<?php
-return [
-    'driver' => 'pgsql',
-    'host' => '$HOST',
-    'database' => '$DBNAME',
-    'username' => '$USER',
-    'password' => '$PASS',
-];
-EOF
+DJBIN="/opt/domjudge/domserver/bin/dj_setup_database"
 
-# 初期 DB セットアップ
-/opt/domjudge/domserver/bin/dj_setup_database -u "$USER" -p "$PASS" -h "$HOST" -d "$DBNAME"
+# 引数形式を自動判定
+if $DJBIN --help 2>&1 | grep -q -- "--host"; then
+    # 新形式（GitHub版）
+    $DJBIN --user="$USER" --password="$PASS" --host="$HOST" --dbname="$DBNAME"
+elif $DJBIN --help 2>&1 | grep -q "Usage:"; then
+    # 古い形式（tarballの一部）
+    $DJBIN -u "$USER" -p "$PASS" "$DBNAME"
+else
+    # 最後の fallback（host を受け取らない古い版）
+    $DJBIN -u "$USER" -p "$PASS"
+fi
 
 # 管理者アカウント作成
 /opt/domjudge/domserver/bin/dj_admin_user --add admin --password admin || true
