@@ -22,14 +22,17 @@ return [
 ];
 EOF
 
-# 初期 DB セットアップ
-/domjudge/domserver/bin/dj_setup_database -u "$USER" -p "$PASS" -H "$HOST"
+# 初期 DB セットアップ（tarball 版の正しいパス）
+/opt/domjudge/domserver/bin/dj_setup_database -u "$USER" -p "$PASS" -H "$HOST" -d "$DBNAME"
 
-# 管理者アカウント作成（存在しなければ）
-/domjudge/domserver/bin/dj_admin_user --add admin --password admin
+# 管理者アカウント作成
+/opt/domjudge/domserver/bin/dj_admin_user --add admin --password admin || true
+
+# PHP-FPM 起動
+php-fpm8.1
 
 # nginx 起動
-nginx &
+nginx
 
-# PHP built-in server（軽量）
+# DOMjudge Web を提供
 php -S 0.0.0.0:80 -t /opt/domjudge/webroot
