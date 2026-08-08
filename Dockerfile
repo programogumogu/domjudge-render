@@ -30,14 +30,16 @@ RUN apt-get update && apt-get install -y \
     python3-distutils \
     nginx \
     tzdata \
+    git \
     wget \
     ca-certificates
 
-# DOMjudge 8.2.0 tarball
-RUN wget https://www.domjudge.org/releases/domjudge-8.2.0.tar.gz -O /tmp/domjudge.tar.gz
-RUN tar xvf /tmp/domjudge.tar.gz -C /opt
+# GitHub 版 DOMjudge を取得
+RUN git clone https://github.com/DOMjudge/domjudge.git /domjudge
+WORKDIR /domjudge
 
-WORKDIR /opt/domjudge-8.2.0
+# ビルド準備
+RUN ./bootstrap
 
 # PostgreSQL モードで configure（最重要）
 RUN ./configure --with-db=pgsql --disable-submitclient --disable-judgehost
