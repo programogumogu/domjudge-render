@@ -1,3 +1,6 @@
+ARG DEBIAN_FRONTEND=noninteractive
+RUN apt-get update && apt-get install -y tzdata
+
 FROM ubuntu:22.04
 
 # 基本ツール
