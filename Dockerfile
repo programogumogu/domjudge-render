@@ -2,6 +2,7 @@ FROM ubuntu:22.04
 
 ARG DEBIAN_FRONTEND=noninteractive
 
+# 必要な依存をすべてインストール（DOMjudge公式推奨 + Render向け）
 RUN apt-get update && apt-get install -y \
     build-essential \
     gcc \
@@ -24,38 +25,28 @@ RUN apt-get update && apt-get install -y \
     php-curl \
     php-zip \
     php-intl \
-    nginx \
-    tzdata \
     python3 \
     python3-dev \
-    python3-distutils
-
-
-
-# 基本ツール
-RUN apt-get update && apt-get install -y \
-    build-essential \
-    php-cli php-curl php-json php-mbstring php-xml php-zip \
-    php-pgsql \
-    mariadb-client \
-    curl \
-    git \
-    unzip \
+    python3-distutils \
     nginx \
-    supervisor \
-    && apt-get clean
+    tzdata \
+    wget \
+    ca-certificates
 
-# DOMjudge を取得
-RUN git clone https://github.com/DOMjudge/domjudge.git /domjudge
+# DOMjudge tarball を取得
+RUN wget https://www.domjudge.org/releases/domjudge-8.2.0.tar.gz -O /tmp/domjudge.tar.gz
 
-# domserver ディレクトリに移動
-WORKDIR /domjudge
+# 展開
+RUN tar xvf /tmp/domjudge.tar.gz -C /opt
 
-# domserver をビルド
-RUN ./configure --disable-submitclient --disable-judgehost && \
-    make domserver
+# domserver ディレクトリへ移動
+WORKDIR /opt/domjudge-8.2.0
 
-# Web assets をコピー
+# configure → make
+RUN ./configure --disable-submitclient --disable-judgehost
+RUN make domserver
+
+# Web assets をインストール
 RUN make install-domserver WEBROOT=/opt/domjudge/webroot \
     && mkdir -p /opt/domjudge/etc
 
@@ -63,7 +54,7 @@ RUN make install-domserver WEBROOT=/opt/domjudge/webroot \
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
-# nginx と supervisor の設定（最小構成）
+# nginx をフォアグラウンド化
 RUN echo "daemon off;" >> /etc/nginx/nginx.conf
 
 # ポート公開
