@@ -33,8 +33,8 @@ RUN apt-get update && apt-get install -y \
     wget \
     ca-certificates
 
-# Release tarball を使う（configure が含まれている）
-RUN wget https://github.com/DOMjudge/domjudge/releases/download/8.2.0/domjudge-8.2.0.tar.gz -O /tmp/domjudge.tar.gz
+# 正しい tarball URL（公式サイト）
+RUN wget https://www.domjudge.org/releases/domjudge-8.2.0.tar.gz -O /tmp/domjudge.tar.gz
 RUN tar xvf /tmp/domjudge.tar.gz -C /opt
 
 WORKDIR /opt/domjudge-8.2.0
