@@ -28,7 +28,9 @@ RUN apt-get update && apt-get install -y \
     python3 \
     python3-dev \
     python3-distutils \
-    **python3-yaml** \
+    python3-yaml \
+    **python3-sphinx** \
+    **python3-sphinx-rtd-theme** \
     nginx \
     tzdata \
     git \
