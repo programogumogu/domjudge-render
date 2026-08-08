@@ -1,7 +1,31 @@
 FROM ubuntu:22.04
 
 ARG DEBIAN_FRONTEND=noninteractive
-RUN apt-get update && apt-get install -y tzdata
+
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    gcc \
+    g++ \
+    make \
+    autoconf \
+    automake \
+    libtool \
+    pkg-config \
+    libpq-dev \
+    libcurl4-openssl-dev \
+    libzip-dev \
+    libmagic-dev \
+    php-cli \
+    php-fpm \
+    php-mbstring \
+    php-xml \
+    php-pgsql \
+    php-curl \
+    php-zip \
+    php-intl \
+    nginx \
+    tzdata
+
 
 # 基本ツール
 RUN apt-get update && apt-get install -y \
