@@ -15,6 +15,7 @@ RUN apt-get update && apt-get install -y \
     libcurl4-openssl-dev \
     libzip-dev \
     libmagic-dev \
+    libjansson-dev \
     php-cli \
     php-fpm \
     php-mbstring \
@@ -24,7 +25,11 @@ RUN apt-get update && apt-get install -y \
     php-zip \
     php-intl \
     nginx \
-    tzdata
+    tzdata \
+    python3 \
+    python3-dev \
+    python3-distutils
+
 
 
 # 基本ツール
@@ -42,7 +47,9 @@ RUN apt-get update && apt-get install -y \
 
 # DOMjudge を取得
 RUN git clone https://github.com/DOMjudge/domjudge.git /domjudge
-WORKDIR /domjudge
+
+# domserver ディレクトリに移動
+WORKDIR /domjudge/domserver
 
 # domserver をビルド
 RUN ./configure --disable-submitclient --disable-judgehost && \
