@@ -13,7 +13,7 @@ PASS="$(echo "$REST" | cut -d: -f2 | cut -d@ -f1)"
 HOST="$(echo "$REST" | cut -d@ -f2 | cut -d/ -f1)"
 DBNAME="$(echo "$REST" | cut -d/ -f2)"
 
-# DOMjudge 設定ファイル生成
+# DOMjudge 設定ファイル生成（DBNAME はここで設定する）
 cat <<EOF > /opt/domjudge/etc/db.php
 <?php
 return [
@@ -27,14 +27,8 @@ EOF
 
 DJBIN="/opt/domjudge/domserver/bin/dj_setup_database"
 
-# 引数形式を自動判定（バージョン差異吸収）
-if $DJBIN --help 2>&1 | grep -q -- "--host"; then
-    # 新形式（GitHub版）
-    $DJBIN --user="$USER" --password="$PASS" --host="$HOST" --dbname="$DBNAME"
-else
-    # 古い形式（tarball版）
-    $DJBIN -u "$USER" -p "$PASS" "$DBNAME"
-fi
+# あなたの DOMjudge は DBNAME を引数で受け取らない
+$DJBIN -u "$USER" -p "$PASS"
 
 # 管理者アカウント作成
 /opt/domjudge/domserver/bin/dj_admin_user --add admin --password admin || true
