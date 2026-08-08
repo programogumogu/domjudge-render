@@ -28,11 +28,13 @@ RUN apt-get update && apt-get install -y \
     python3 \
     python3-dev \
     python3-distutils \
+    **python3-yaml** \
     nginx \
     tzdata \
     git \
     wget \
     ca-certificates
+
 
 # GitHub 版 DOMjudge を取得
 RUN git clone https://github.com/DOMjudge/domjudge.git /domjudge
