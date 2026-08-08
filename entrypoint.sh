@@ -1,7 +1,6 @@
 #!/bin/bash
 set -e
 
-# DATABASE_URL を分解（クエリなし前提）
 DBURL="$DATABASE_URL"
 REST="${DBURL#*://}"
 
@@ -10,7 +9,6 @@ PASS="$(echo "$REST" | cut -d: -f2 | cut -d@ -f1)"
 HOST="$(echo "$REST" | cut -d@ -f2 | cut -d/ -f1)"
 DBNAME="$(echo "$REST" | cut -d/ -f2)"
 
-# db.php を生成（DBNAME はここで設定）
 cat <<EOF > /opt/domjudge/etc/db.php
 <?php
 return [
@@ -24,10 +22,9 @@ EOF
 
 DJBIN="/opt/domjudge/domserver/bin/dj_setup_database"
 
-# あなたの DOMjudge は「install」コマンドを使う
-$DJBIN -u "$USER" -p "$PASS" install
+# PostgreSQL モードの正しい呼び出し
+$DJBIN --user="$USER" --password="$PASS" --host="$HOST" --dbname="$DBNAME" install
 
-# 管理者アカウント作成
 /opt/domjudge/domserver/bin/dj_admin_user --add admin --password admin || true
 
 php-fpm8.1
