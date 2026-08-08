@@ -46,7 +46,8 @@ WORKDIR /domjudge
 RUN ./bootstrap
 
 # PostgreSQL モードで configure
-RUN ./configure --with-db=pgsql --disable-submitclient --disable-judgehost
+RUN ./configure --with-db=pgsql --disable-submitclient --disable-judgehost --disable-docs
+
 
 RUN make domserver
 RUN make install-domserver WEBROOT=/opt/domjudge/webroot
