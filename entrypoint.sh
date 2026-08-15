@@ -1,21 +1,16 @@
 #!/bin/bash
 set -e
 
-DBURL="$DATABASE_URL"
-REST="${DBURL#*://}"
+cd /opt/domjudge/domserver/webapp
 
-USER="${REST%%:*}"
-PASS="$(echo "$REST" | cut -d: -f2 | cut -d@ -f1)"
-HOST="$(echo "$REST" | cut -d@ -f2 | cut -d/ -f1)"
-DBNAME="$(echo "$REST" | cut -d/ -f2)"
+echo "Running Doctrine migrations..."
+php bin/console doctrine:migrations:migrate --no-interaction
 
-DJBIN="/opt/domjudge/domserver/bin/dj_setup_database"
+echo "Loading initial data..."
+php bin/console domjudge:load-data --no-interaction
 
-echo "Initializing database..."
-$DJBIN -u "$USER" -p "$PASS" -h "$HOST" install
-
-echo "Adding admin user..."
-/opt/domjudge/domserver/bin/dj_admin_user --add admin --password admin || true
+echo "Creating admin user..."
+php bin/console domjudge:admin --add admin --password admin
 
 php-fpm8.1 -F &
 nginx -g "daemon off;"
