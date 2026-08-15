@@ -30,8 +30,8 @@ php bin/console domjudge:load-default-data --no-interaction
 chown -R www-data:www-data /opt/domjudge/domserver/webapp/var
 chmod -R 775 /opt/domjudge/domserver/webapp/var
 
-# DOMjudge base URL (必須)
-cat > /opt/domjudge/domserver/etc/domjudge.yaml <<EOF
+# DOMjudge base URL (WebApp が読む正しい場所)
+cat > /opt/domjudge/domserver/webapp/config/domjudge.yaml <<EOF
 baseurl: "https://domjudge-web.onrender.com"
 EOF
 
