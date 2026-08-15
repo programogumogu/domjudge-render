@@ -11,7 +11,6 @@ RUN apt-get update && apt-get install -y \
     automake \
     libtool \
     pkg-config \
-    libpq-dev \
     libcurl4-openssl-dev \
     libzip-dev \
     libmagic-dev \
@@ -21,10 +20,10 @@ RUN apt-get update && apt-get install -y \
     php-fpm \
     php-mbstring \
     php-xml \
-    php-pgsql \
     php-curl \
     php-zip \
     php-intl \
+    php-mysql \
     python3 \
     python3-dev \
     python3-distutils \
@@ -33,7 +32,8 @@ RUN apt-get update && apt-get install -y \
     wget \
     ca-certificates \
     curl \
-    **mysql-client**
+    mysql-client
+
 
 
 # Composer
