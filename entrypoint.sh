@@ -44,25 +44,18 @@ http {
     # DOMjudge の公式 nginx 設定（server ブロックを含む）
     include /opt/domjudge/domserver/etc/nginx-conf;
 
-    # Render の PORT を使うように上書き
+    # Render の PORT を使う server ブロックを上書き
     server {
         listen ${PORT};
         server_name _;
         root /opt/domjudge/domserver/webapp/public;
 
-        index index.php;
-
-        location / {
-            try_files \$uri /index.php?\$args;
-        }
-
-        location ~ \.php$ {
-            include snippets/fastcgi-php.conf;
-            fastcgi_pass unix:/run/php/php-fpm.sock;
-        }
+        # DOMjudge の PHP / static / API 設定をすべて含む
+        include /opt/domjudge/domserver/etc/nginx-conf-inner;
     }
 }
 EOF
+
 
 
 # ============================
