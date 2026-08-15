@@ -34,19 +34,18 @@ RUN apt-get update && apt-get install -y \
     ca-certificates \
     curl
 
-# Composer をインストール（DOMjudge 9 系で必須）
+# Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-# DOMjudge 9.0.1 tarball
+# DOMjudge
 RUN wget https://www.domjudge.org/releases/domjudge-9.0.1.tar.gz -O /tmp/domjudge.tar.gz
 RUN tar xvf /tmp/domjudge.tar.gz -C /opt
 
 WORKDIR /opt/domjudge-9.0.1
 
-# root でのビルドを許可する
-RUN ./configure --with-domjudge-user=root
+# root + PostgreSQL を明示
+RUN ./configure --with-domjudge-user=root --with-db=pgsql
 
-# DOMserver のみインストール
 RUN make install-domserver WEBROOT=/opt/domjudge/webroot
 
 COPY entrypoint.sh /entrypoint.sh
