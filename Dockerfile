@@ -39,10 +39,10 @@ RUN tar xvf /tmp/domjudge.tar.gz -C /opt
 
 WORKDIR /opt/domjudge-9.0.1
 
-# root でのビルドを許可する（最重要）
-RUN ./configure --with-domjudge-user=root --with-db=pgsql --disable-submitclient --disable-judgehost
+# root でのビルドを許可する
+RUN ./configure --with-domjudge-user=root
 
-RUN make
+# DOMserver のみインストール（make は不要）
 RUN make install-domserver WEBROOT=/opt/domjudge/webroot
 
 COPY entrypoint.sh /entrypoint.sh
