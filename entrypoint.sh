@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-cd /opt/domjudge/webroot
+cd /opt/domjudge/domserver/webapp
 
 echo "Running Doctrine migrations..."
 php bin/console doctrine:migrations:migrate --no-interaction
