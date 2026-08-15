@@ -44,14 +44,16 @@ RUN tar xvf /tmp/domjudge.tar.gz -C /opt
 WORKDIR /opt/domjudge-9.0.1
 
 RUN ./configure --with-domjudge-user=root --with-db=mysql
-RUN make install-domserver WEBROOT=/opt/domjudge/webroot
+RUN make install-domserver WEBROOT=/opt/domjudge/domserver/webapp/public
 
-# ここが重要：問題のマイグレーションを確実に削除する
+# Remove problematic migration
 RUN find /opt -name Version20221004135409.php -delete
+
+# Install DOMjudge nginx config
+RUN cp /opt/domjudge-9.0.1/etc/nginx-domjudge.conf /etc/nginx/nginx.conf
 
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
-
 
 EXPOSE 80
 
