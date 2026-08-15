@@ -1,12 +1,34 @@
 #!/bin/bash
 set -e
 
+# ============================
+# 1. Generate DB config
+# ============================
+cat > /opt/domjudge/domserver/etc/db-config.yaml <<EOF
+database:
+  host: "${DB_HOST}"
+  port: ${DB_PORT}
+  name: "${DB_NAME}"
+  user: "${DB_USER}"
+  password: "${DB_PASS}"
+  sslmode: "${DB_SSL}"
+EOF
+
+cat > /opt/domjudge/domserver/etc/dbpasswords.secret <<EOF
+${DB_PASS}
+EOF
+
+# ============================
+# 2. Initialize DOMjudge DB
+# ============================
 cd /opt/domjudge/domserver/webapp
 
 php bin/console doctrine:migrations:migrate --no-interaction
 php bin/console domjudge:load-default-data --no-interaction
 
-# Render の PORT を使って nginx.conf を生成
+# ============================
+# 3. Generate nginx.conf using Render PORT
+# ============================
 cat > /etc/nginx/nginx.conf <<EOF
 user www-data;
 worker_processes auto;
@@ -19,6 +41,7 @@ http {
     include /etc/nginx/mime.types;
     default_type application/octet-stream;
 
+    # DOMjudge upstream definitions
     include /opt/domjudge/domserver/etc/nginx-conf;
 
     upstream php-handler {
@@ -35,5 +58,8 @@ http {
 }
 EOF
 
+# ============================
+# 4. Start php-fpm + nginx
+# ============================
 php-fpm8.1 -F &
 nginx -g "daemon off;"
