@@ -17,6 +17,7 @@ RUN apt-get update && apt-get install -y \
     libjansson-dev \
     libcgroup-dev \
     php-cli \
+    php-fpm \
     php-mbstring \
     php-xml \
     php-curl \
@@ -26,6 +27,7 @@ RUN apt-get update && apt-get install -y \
     python3 \
     python3-dev \
     python3-distutils \
+    nginx \
     tzdata \
     wget \
     ca-certificates \
@@ -44,8 +46,10 @@ WORKDIR /opt/domjudge-9.0.1
 RUN ./configure --with-domjudge-user=root --with-db=mysql
 RUN make install-domserver WEBROOT=/opt/domjudge/domserver/webapp/public
 
-# Remove problematic migration
 RUN find /opt -name Version20221004135409.php -delete
+
+# nginx.conf for Render
+RUN printf "user www-data;\nworker_processes auto;\n\nevents {\n    worker_connections 1024;\n}\n\nhttp {\n    include /etc/nginx/mime.types;\n    default_type application/octet-stream;\n\n    upstream php-handler {\n        server unix:/run/php/php-fpm.sock;\n    }\n\n    server {\n        listen \$PORT;\n        server_name _;\n        root /opt/domjudge/domserver/webapp/public;\n\n        include /opt/domjudge/domserver/etc/nginx-conf-inner;\n    }\n}\n" > /etc/nginx/nginx.conf
 
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
