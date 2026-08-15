@@ -27,7 +27,7 @@ php bin/console doctrine:migrations:migrate --no-interaction
 php bin/console domjudge:load-default-data --no-interaction
 
 # ============================
-# 3. Generate nginx.conf (Render 用・完全版)
+# 3. Generate nginx.conf
 # ============================
 cat > /etc/nginx/nginx.conf <<EOF
 user www-data;
@@ -48,21 +48,14 @@ http {
 
         index index.php;
 
-        # 静的ファイル
         location / {
             try_files \$uri /index.php?\$args;
         }
 
-        # PHP
         location ~ \.php$ {
             include fastcgi_params;
             fastcgi_param SCRIPT_FILENAME \$document_root\$fastcgi_script_name;
             fastcgi_pass unix:/run/php/php-fpm.sock;
-        }
-
-        # セキュリティ
-        location ~ /\.ht {
-            deny all;
         }
     }
 }
@@ -71,5 +64,5 @@ EOF
 # ============================
 # 4. Start php-fpm + nginx
 # ============================
-php-fpm8.1 -F &
+/usr/sbin/php-fpm8.1 -F &
 nginx -g "daemon off;"
