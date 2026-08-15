@@ -26,6 +26,10 @@ cd /opt/domjudge/domserver/webapp
 php bin/console doctrine:migrations:migrate --no-interaction
 php bin/console domjudge:load-default-data --no-interaction
 
+# Fix permissions (ACL not available on Render)
+chown -R www-data:www-data /opt/domjudge/domserver/webapp/var
+chmod -R 775 /opt/domjudge/domserver/webapp/var
+
 # ============================
 # 3. Generate nginx.conf (Render 用・完全版)
 # ============================
