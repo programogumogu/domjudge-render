@@ -34,8 +34,6 @@ RUN apt-get update && apt-get install -y \
     curl \
     mysql-client
 
-
-
 # Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
@@ -45,10 +43,11 @@ RUN tar xvf /tmp/domjudge.tar.gz -C /opt
 
 WORKDIR /opt/domjudge-9.0.1
 
-# root + PostgreSQL を明示
 RUN ./configure --with-domjudge-user=root --with-db=pgsql
-
 RUN make install-domserver WEBROOT=/opt/domjudge/webroot
+
+# ここが重要：問題のマイグレーションを確実に削除する
+RUN find /opt -name Version20221004135409.php -delete
 
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
