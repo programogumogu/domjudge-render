@@ -2,7 +2,8 @@
 set -e
 
 # Render が強制注入する DATABASE_URL を完全に無効化
-export DATABASE_URL="mysql://invalid:invalid@invalid/invalid"
+unset DATABASE_URL
+export DATABASE_URL=""
 
 
 
