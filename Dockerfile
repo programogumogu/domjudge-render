@@ -51,8 +51,9 @@ RUN find /opt -name Version20221004135409.php -delete
 
 # Install DOMjudge nginx config correctly
 RUN rm -f /etc/nginx/sites-enabled/default && \
-    cp /opt/domjudge-9.0.1/etc/nginx-conf /etc/nginx/conf.d/domjudge.conf && \
-    cp /opt/domjudge-9.0.1/etc/nginx-conf-inner /etc/nginx/conf.d/domjudge-inner.conf
+    cp /opt/domjudge-9.0.1/etc/nginx-conf /etc/nginx/domjudge-http.conf && \
+    cp /opt/domjudge-9.0.1/etc/nginx-conf-inner /etc/nginx/domjudge-inner.conf && \
+    printf "user www-data;\nworker_processes auto;\n\nevents {\n    worker_connections 1024;\n}\n\nhttp {\n    include /etc/nginx/mime.types;\n    default_type application/octet-stream;\n\n    include /etc/nginx/domjudge-http.conf;\n\n    server {\n        listen 80;\n        server_name _;\n        root /opt/domjudge/domserver/webapp/public;\n        include /etc/nginx/domjudge-inner.conf;\n    }\n}\n" > /etc/nginx/nginx.conf
 
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
