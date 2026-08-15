@@ -33,16 +33,16 @@ RUN apt-get update && apt-get install -y \
     wget \
     ca-certificates
 
-# 正しい tarball URL（公式サイト）
-RUN wget https://www.domjudge.org/releases/domjudge-8.2.0.tar.gz -O /tmp/domjudge.tar.gz
+# DOMjudge 9.0.1 tarball
+RUN wget https://www.domjudge.org/releases/domjudge-9.0.1.tar.gz -O /tmp/domjudge.tar.gz
 RUN tar xvf /tmp/domjudge.tar.gz -C /opt
 
-WORKDIR /opt/domjudge-8.2.0
+WORKDIR /opt/domjudge-9.0.1
 
-# PostgreSQL モードで configure
+# PostgreSQL モードで configure（最重要）
 RUN ./configure --with-db=pgsql --disable-submitclient --disable-judgehost
 
-RUN make domserver
+RUN make
 RUN make install-domserver WEBROOT=/opt/domjudge/webroot
 
 COPY entrypoint.sh /entrypoint.sh
