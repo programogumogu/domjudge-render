@@ -27,7 +27,7 @@ php bin/console doctrine:migrations:migrate --no-interaction
 php bin/console domjudge:load-default-data --no-interaction
 
 # ============================
-# 3. Generate nginx.conf using Render PORT
+# 3. Generate nginx.conf (DOMjudge 9 正しい構成)
 # ============================
 cat > /etc/nginx/nginx.conf <<EOF
 user www-data;
@@ -40,9 +40,6 @@ events {
 http {
     include /etc/nginx/mime.types;
     default_type application/octet-stream;
-
-    # DOMjudge upstream definitions
-    include /opt/domjudge/domserver/etc/nginx-conf;
 
     upstream php-handler {
         server unix:/run/php/php-fpm.sock;
