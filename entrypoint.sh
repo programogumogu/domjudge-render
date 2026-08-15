@@ -65,7 +65,7 @@ http {
         index index.php;
 
         location / {
-            try_files \$uri /index.php?\$args;
+            try_files \$uri \$uri/ /index.php;
         }
 
         location ~ \.php$ {
