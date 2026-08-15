@@ -27,7 +27,7 @@ php bin/console doctrine:migrations:migrate --no-interaction
 php bin/console domjudge:load-default-data --no-interaction
 
 # ============================
-# 3. Generate nginx.conf (DOMjudge 9 正しい構成)
+# 3. Generate nginx.conf (Render 用・完全版)
 # ============================
 cat > /etc/nginx/nginx.conf <<EOF
 user www-data;
@@ -41,22 +41,32 @@ http {
     include /etc/nginx/mime.types;
     default_type application/octet-stream;
 
-    # DOMjudge の公式 nginx 設定（server ブロックを含む）
-    include /opt/domjudge/domserver/etc/nginx-conf;
-
-    # Render の PORT を使う server ブロックを上書き
     server {
         listen ${PORT};
         server_name _;
         root /opt/domjudge/domserver/webapp/public;
 
-        # DOMjudge の PHP / static / API 設定をすべて含む
-        include /opt/domjudge/domserver/etc/nginx-conf-inner;
+        index index.php;
+
+        # 静的ファイル
+        location / {
+            try_files \$uri /index.php?\$args;
+        }
+
+        # PHP
+        location ~ \.php$ {
+            include fastcgi_params;
+            fastcgi_param SCRIPT_FILENAME \$document_root\$fastcgi_script_name;
+            fastcgi_pass unix:/run/php/php-fpm.sock;
+        }
+
+        # セキュリティ
+        location ~ /\.ht {
+            deny all;
+        }
     }
 }
 EOF
-
-
 
 # ============================
 # 4. Start php-fpm + nginx
