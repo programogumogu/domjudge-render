@@ -24,24 +24,14 @@ EOF
 
 DJBIN="/opt/domjudge/domserver/bin/dj_setup_database"
 
-# GitHub 版はこの形式で確実に動く
-echo "Running dj_setup_database..."
-$DJBIN --user="$USER" --password="$PASS" --host="$HOST" --dbname="$DBNAME" --sslmode=require install
+echo "Running dj_setup_database (old format)..."
+$DJBIN -u "$USER" -p "$PASS" "$DBNAME" || echo "bare-install failed"
+
+echo "Installing example data..."
+$DJBIN -u "$USER" -p "$PASS" install-examples || echo "install-examples failed"
+
 echo "Adding admin user..."
-/opt/domjudge/domserver/bin/dj_admin_user --add admin --password admin || true
-
-
-echo "Running migrations..."
-php bin/console doctrine:migrations:migrate --no-interaction || echo "Migration failed"
-echo "Loading initial data..."
-php bin/console domjudge:load-data --no-interaction || echo "Load-data failed"
-
-# Run DB migrations (only once needed)
-php bin/console doctrine:migrations:migrate --no-interaction
-
-# Load initial data (admin user, languages, etc.)
-php bin/console domjudge:load-data --no-interaction
-
+/opt/domjudge/domserver/bin/dj_admin_user --add admin --password admin || echo "admin user failed"
 
 php-fpm8.1 -F &
 nginx -g "daemon off;"
