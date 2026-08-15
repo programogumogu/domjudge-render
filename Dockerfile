@@ -50,7 +50,8 @@ RUN make install-domserver WEBROOT=/opt/domjudge/domserver/webapp/public
 RUN find /opt -name Version20221004135409.php -delete
 
 # Install DOMjudge nginx config
-RUN cp /opt/domjudge-9.0.1/etc/nginx-domjudge.conf /etc/nginx/nginx.conf
+RUN cp /opt/domjudge-9.0.1/etc/nginx-conf /etc/nginx/nginx.conf
+
 
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
