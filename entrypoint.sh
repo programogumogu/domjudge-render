@@ -1,6 +1,11 @@
 #!/bin/bash
 set -e
 
+# Render が勝手に入れる DATABASE_URL を無効化
+unset DATABASE_URL
+export DATABASE_URL=""
+
+
 # ============================
 # 1. Generate DB config
 # ============================
