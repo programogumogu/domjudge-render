@@ -25,8 +25,9 @@ EOF
 DJBIN="/opt/domjudge/domserver/bin/dj_setup_database"
 
 # GitHub 版はこの形式で確実に動く
-$DJBIN --user="$USER" --password="$PASS" --host="$HOST" --dbname="$DBNAME" install
-
+echo "Running dj_setup_database..."
+$DJBIN --user="$USER" --password="$PASS" --host="$HOST" --dbname="$DBNAME" --sslmode=require install
+echo "Adding admin user..."
 /opt/domjudge/domserver/bin/dj_admin_user --add admin --password admin || true
 
 
