@@ -6,13 +6,13 @@ set -e
 # ============================
 cat > /opt/domjudge/domserver/etc/db-config.yaml <<EOF
 database:
-  host: "${DB_HOST}"
-  port: ${DB_PORT}
-  name: "${DB_NAME}"
-  user: "${DB_USER}"
-  password: "${DB_PASS}"
-  sslmode: "${DB_SSL}"
+    host: "${DB_HOST}"
+    port: ${DB_PORT}
+    dbname: "${DB_NAME}"
+    username: "${DB_USER}"
+    password: "${DB_PASS}"
 EOF
+
 
 cat > /opt/domjudge/domserver/etc/dbpasswords.secret <<EOF
 ${DB_PASS}
