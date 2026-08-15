@@ -41,18 +41,29 @@ http {
     include /etc/nginx/mime.types;
     default_type application/octet-stream;
 
-    # DOMjudge upstream definitions (必須)
+    # DOMjudge の公式 nginx 設定（server ブロックを含む）
     include /opt/domjudge/domserver/etc/nginx-conf;
 
+    # Render の PORT を使うように上書き
     server {
         listen ${PORT};
         server_name _;
         root /opt/domjudge/domserver/webapp/public;
 
-        include /opt/domjudge/domserver/etc/nginx-conf-inner;
+        index index.php;
+
+        location / {
+            try_files \$uri /index.php?\$args;
+        }
+
+        location ~ \.php$ {
+            include snippets/fastcgi-php.conf;
+            fastcgi_pass unix:/run/php/php-fpm.sock;
+        }
     }
 }
 EOF
+
 
 # ============================
 # 4. Start php-fpm + nginx
