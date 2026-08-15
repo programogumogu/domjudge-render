@@ -3,6 +3,9 @@ set -e
 
 cd /opt/domjudge/domserver/webapp
 
+# Remove problematic migration
+rm -f /opt/domjudge/domserver/lib/vendor/domjudge/doctrine-migrations/DoctrineMigrations/Version20221004135409.php
+
 echo "Running Doctrine migrations..."
 php bin/console doctrine:migrations:migrate --no-interaction
 
