@@ -43,7 +43,7 @@ RUN tar xvf /tmp/domjudge.tar.gz -C /opt
 
 WORKDIR /opt/domjudge-9.0.1
 
-RUN ./configure --with-domjudge-user=root --with-db=pgsql
+RUN ./configure --with-domjudge-user=root --with-db=mysql
 RUN make install-domserver WEBROOT=/opt/domjudge/webroot
 
 # ここが重要：問題のマイグレーションを確実に削除する
