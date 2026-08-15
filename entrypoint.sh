@@ -34,6 +34,9 @@ chmod -R 775 /opt/domjudge/domserver/webapp/var
 echo "APP_ENV=dev" >> /opt/domjudge/domserver/webapp/.env
 echo "APP_DEBUG=1" >> /opt/domjudge/domserver/webapp/.env
 
+# Fix missing APP_URL (required by DOMjudge)
+echo "APP_URL=https://domjudge-web.onrender.com" >> /opt/domjudge/domserver/webapp/.env
+
 # ============================
 # 3. Generate nginx.conf (Render 用・完全版)
 # ============================
