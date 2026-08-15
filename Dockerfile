@@ -52,7 +52,6 @@ RUN find /opt -name Version20221004135409.php -delete
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
-RUN echo "daemon off;" >> /etc/nginx/nginx.conf
 
 EXPOSE 80
 
