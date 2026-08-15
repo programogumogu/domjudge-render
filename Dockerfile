@@ -43,7 +43,9 @@ RUN tar xvf /tmp/domjudge.tar.gz -C /opt
 
 WORKDIR /opt/domjudge-9.0.1
 
-RUN ./configure --with-domjudge-user=root --with-db=mysql
+# DOMjudge 9 の正しい configure
+RUN ./configure --with-domjudge-user=root
+
 RUN make install-domserver WEBROOT=/opt/domjudge/domserver/webapp/public
 
 RUN find /opt -name Version20221004135409.php -delete
