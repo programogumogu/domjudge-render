@@ -30,6 +30,10 @@ php bin/console domjudge:load-default-data --no-interaction
 chown -R www-data:www-data /opt/domjudge/domserver/webapp/var
 chmod -R 775 /opt/domjudge/domserver/webapp/var
 
+# Force Symfony dev mode
+echo "APP_ENV=dev" >> /opt/domjudge/domserver/webapp/.env
+echo "APP_DEBUG=1" >> /opt/domjudge/domserver/webapp/.env
+
 # ============================
 # 3. Generate nginx.conf (Render 用・完全版)
 # ============================
