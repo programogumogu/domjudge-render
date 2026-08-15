@@ -39,8 +39,8 @@ RUN tar xvf /tmp/domjudge.tar.gz -C /opt
 
 WORKDIR /opt/domjudge-9.0.1
 
-# PostgreSQL モードで configure（最重要）
-RUN ./configure --with-db=pgsql --disable-submitclient --disable-judgehost
+# root でのビルドを許可する（最重要）
+RUN ./configure --with-domjudge-user=root --with-db=pgsql --disable-submitclient --disable-judgehost
 
 RUN make
 RUN make install-domserver WEBROOT=/opt/domjudge/webroot
