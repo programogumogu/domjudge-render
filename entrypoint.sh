@@ -30,6 +30,11 @@ php bin/console domjudge:load-default-data --no-interaction
 chown -R www-data:www-data /opt/domjudge/domserver/webapp/var
 chmod -R 775 /opt/domjudge/domserver/webapp/var
 
+# DOMjudge base URL (必須)
+cat > /opt/domjudge/domserver/etc/domjudge.yaml <<EOF
+baseurl: "https://domjudge-web.onrender.com"
+EOF
+
 # Force Symfony dev mode
 echo "APP_ENV=dev" >> /opt/domjudge/domserver/webapp/.env
 echo "APP_DEBUG=1" >> /opt/domjudge/domserver/webapp/.env
