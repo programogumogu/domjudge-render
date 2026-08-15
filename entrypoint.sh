@@ -41,9 +41,8 @@ http {
     include /etc/nginx/mime.types;
     default_type application/octet-stream;
 
-    upstream php-handler {
-        server unix:/run/php/php-fpm.sock;
-    }
+    # DOMjudge upstream definitions (必須)
+    include /opt/domjudge/domserver/etc/nginx-conf;
 
     server {
         listen ${PORT};
